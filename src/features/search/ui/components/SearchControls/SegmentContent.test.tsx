@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { SearchParam } from '@/features/search/core';
 
@@ -192,5 +193,39 @@ describe('SegmentContent', () => {
 
       expect(container.firstChild).toBeNull();
     });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['segment matches exactly', 'resources', { [SearchParam.SEGMENT]: 'resources' }, { segment: 'resources' }],
+      [
+        'prefix matches',
+        'authorities:search',
+        { [SearchParam.SEGMENT]: 'authorities:search' },
+        { segment: 'authorities', matchPrefix: true },
+      ],
+      ['segment does not match', 'authorities', { [SearchParam.SEGMENT]: 'authorities' }, { segment: 'resources' }],
+    ])(
+      'has no accessibility violations when %s',
+      async (_description, currentSegment, navigationStateOverrides, props) => {
+        mockCurrentSegment = currentSegment;
+        setInitialGlobalState([
+          {
+            store: useSearchStore,
+            state: { navigationState: navigationStateOverrides, setNavigationState },
+          },
+        ]);
+
+        const { container } = render(
+          <SegmentContent {...props}>
+            <div>Content</div>
+          </SegmentContent>,
+        );
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
+      },
+    );
   });
 });

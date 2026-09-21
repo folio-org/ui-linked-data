@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { Button, ButtonType } from '@/components/Button';
@@ -14,21 +15,25 @@ import { useLoadingState, useManageProfileSettingsState, useStatusState, useUISt
 
 import ArrowLeftIcon from '@/assets/arrow-left-16.svg?react';
 
-import { CustomProfileToggle } from '../CustomProfileToggle';
 import { DefaultProfileOption } from '../DefaultProfileOption';
 import { ProfileSettingsEditor } from '../ProfileSettingsEditor';
+import { ProfileSettingsList } from '../ProfileSettingsList';
 
 import './ProfileSettings.scss';
 
 export const ProfileSettings = () => {
+  const { formatMessage } = useIntl();
   const { setIsLoading } = useLoadingState();
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
-  const { selectedProfile, setFullProfile, setProfileSettings } = useManageProfileSettingsState([
-    'selectedProfile',
-    'setFullProfile',
-    'setProfileSettings',
-  ]);
+  const { selectedProfile, selectedProfileSettingsMeta, setFullProfile, setProfileSettings, resetProfileSettings } =
+    useManageProfileSettingsState([
+      'selectedProfile',
+      'selectedProfileSettingsMeta',
+      'setFullProfile',
+      'setProfileSettings',
+      'resetProfileSettings',
+    ]);
   const {
     isManageProfileSettingsBelowBreakpoint,
     isManageProfileSettingsShowEditor,
@@ -48,27 +53,51 @@ export const ProfileSettings = () => {
   };
 
   useEffect(() => {
-    if (selectedProfile) {
-      const initialize = async () => {
-        try {
-          setIsLoading(true);
-          const profile = await loadProfile(selectedProfile.id);
-          setFullProfile(profile);
-          setProfileSettings(
-            await loadProfileSettings(String(selectedProfile.id), profile, selectedProfile.resourceType),
-          );
-        } catch {
+    if (!selectedProfile) return;
+
+    let cancelled = false;
+
+    const initialize = async () => {
+      try {
+        setIsLoading(true);
+        const profile = await loadProfile(selectedProfile.id);
+
+        if (cancelled) return;
+
+        setFullProfile(profile);
+        if (selectedProfileSettingsMeta) {
+          if (selectedProfileSettingsMeta.id === PROFILE_SETTINGS_DEFAULT_OPTION) {
+            resetProfileSettings();
+          } else {
+            const settings = await loadProfileSettings(
+              selectedProfileSettingsMeta.id,
+              String(selectedProfile.id),
+              profile,
+              selectedProfile.resourceType,
+            );
+
+            if (cancelled) return;
+
+            setProfileSettings(settings);
+          }
+        }
+      } catch {
+        if (!cancelled) {
           addStatusMessagesItem?.(
             UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfileSettings'),
           );
-        } finally {
-          setIsLoading(false);
         }
-      };
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
 
-      initialize();
-    }
-  }, [selectedProfile]);
+    initialize();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedProfile, selectedProfileSettingsMeta]);
 
   const showView =
     !isManageProfileSettingsBelowBreakpoint ||
@@ -78,7 +107,12 @@ export const ProfileSettings = () => {
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           {isManageProfileSettingsBelowBreakpoint && (
-            <Button data-testid="back-to-profiles-list" type={ButtonType.Icon} onClick={handleBack}>
+            <Button
+              data-testid="back-to-profiles-list"
+              type={ButtonType.Icon}
+              onClick={handleBack}
+              ariaLabel={formatMessage({ id: 'ld.backToProfilesList' })}
+            >
               <ArrowLeftIcon />
             </Button>
           )}
@@ -96,7 +130,7 @@ export const ProfileSettings = () => {
 
       <hr />
 
-      <CustomProfileToggle />
+      <ProfileSettingsList />
 
       <ProfileSettingsEditor />
     </div>

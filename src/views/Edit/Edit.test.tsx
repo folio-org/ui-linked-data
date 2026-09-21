@@ -7,6 +7,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import * as Router from 'react-router-dom';
 
 import { act, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import { Edit } from '@/views';
@@ -52,7 +53,10 @@ describe('Edit', () => {
       setInitialGlobalState([
         {
           store: useProfileStore,
-          state: { selectedProfile: recordState },
+          state: {
+            selectedProfile: recordState,
+            selectedProfileSettingsId: null,
+          },
         },
       ]);
 
@@ -100,5 +104,17 @@ describe('Edit', () => {
     await renderComponent(null);
 
     expect(initNewResource).not.toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testResourceId' });
+
+      const { container } = await renderComponent(monograph as unknown as ProfileEntry);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

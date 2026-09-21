@@ -23,12 +23,15 @@ export const getResourceTypeConfig = (type: ResourceTypeInput): ResourceTypeDefi
 
 /**
  * Get the ResourceType from a type URL.
- * Falls back to instance type if the type URL is not found in the registry.
+ * Matches against both the canonical `resourceTypeUri` (used for profile selection)
+ * and the record-processing `uri`. Falls back to instance type if not found.
  */
 export const getResourceTypeFromURL = (typeURL: ResourceTypeURLInput): ResourceType => {
   if (typeURL) {
     for (const type in RESOURCE_TYPE_REGISTRY) {
-      if (RESOURCE_TYPE_REGISTRY[type as ResourceType].uri === typeURL) {
+      const config = RESOURCE_TYPE_REGISTRY[type as ResourceType];
+
+      if (config.uri === typeURL || config.resourceTypeUri === typeURL) {
         return type as ResourceType;
       }
     }
@@ -51,6 +54,10 @@ export const getReference = (type: ResourceTypeInput): ResourceTypeReference | u
 
 export const getUri = (type: ResourceTypeInput): string => {
   return getResourceTypeConfig(type).uri;
+};
+
+export const getResourceTypeUri = (type: ResourceTypeInput): string => {
+  return getResourceTypeConfig(type).resourceTypeUri ?? getResourceTypeConfig(type).uri;
 };
 
 export const getDefaultProfileId = (type: ResourceTypeInput): number => {

@@ -1,7 +1,12 @@
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
-import { getLabelId, getWarningByProfileNames, isProfilePreferred } from '@/common/helpers/profileSelection.helper';
+import {
+  getProfileSelectionMessageIds,
+  getResourceTypeLabelId,
+  getWarningByProfileNames,
+  isProfilePreferred,
+} from '@/common/helpers/profileSelection.helper';
 
 const mockBibframeConstants = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
 mockBibframeConstants({ WORK: 'work_URL', INSTANCE: 'instance_URL' });
@@ -34,83 +39,43 @@ jest.mock('@/configs', () => ({
 }));
 
 describe('profileSelection.helper', () => {
-  describe('getLabelId', () => {
-    it('returns workSet label when action is set and resourceType is work', () => {
-      const labels = {
-        workSet: 'workSetLabel',
-        instanceSet: 'instanceSetLabel',
-        workChange: 'workChangeLabel',
-        instanceChange: 'instanceChangeLabel',
-        defaultLabel: 'defaultLabel',
-      };
-      const profileSelectionType = { action: 'set', resourceTypeURL: 'work_URL' as ResourceTypeURL } as const;
-
-      const result = getLabelId({ labels, profileSelectionType });
-
-      expect(result).toBe('workSetLabel');
-    });
-
-    it('returns instanceSet label when action is set and resourceType is instance', () => {
-      const labels = {
-        workSet: 'workSetLabel',
-        instanceSet: 'instanceSetLabel',
-        workChange: 'workChangeLabel',
-        instanceChange: 'instanceChangeLabel',
-        defaultLabel: 'defaultLabel',
-      };
-      const profileSelectionType = { action: 'set', resourceTypeURL: 'instance_URL' as ResourceTypeURL } as const;
-
-      const result = getLabelId({ labels, profileSelectionType });
-
-      expect(result).toBe('instanceSetLabel');
-    });
-
-    it('returns workChange label when action is change and resourceType is work', () => {
-      const labels = {
-        workSet: 'workSetLabel',
-        instanceSet: 'instanceSetLabel',
-        workChange: 'workChangeLabel',
-        instanceChange: 'instanceChangeLabel',
-        defaultLabel: 'defaultLabel',
-      };
-      const profileSelectionType = { action: 'change', resourceTypeURL: 'work_URL' as ResourceTypeURL } as const;
-
-      const result = getLabelId({ labels, profileSelectionType });
-
-      expect(result).toBe('workChangeLabel');
-    });
-
-    it('returns instanceChange label when action is change and resourceType is instance', () => {
-      const labels = {
-        workSet: 'workSetLabel',
-        instanceSet: 'instanceSetLabel',
-        workChange: 'workChangeLabel',
-        instanceChange: 'instanceChangeLabel',
-        defaultLabel: 'defaultLabel',
-      };
-      const profileSelectionType = { action: 'change', resourceTypeURL: 'instance_URL' as ResourceTypeURL } as const;
-
-      const result = getLabelId({ labels, profileSelectionType });
-
-      expect(result).toBe('instanceChangeLabel');
-    });
-
-    it('returns defaultLabel when action is not recognized', () => {
-      const labels = {
-        workSet: 'workSetLabel',
-        instanceSet: 'instanceSetLabel',
-        workChange: 'workChangeLabel',
-        instanceChange: 'instanceChangeLabel',
-        defaultLabel: 'defaultLabel',
-      };
-      const profileSelectionType = {
-        action: 'unknown' as 'set',
+  describe('getProfileSelectionMessageIds', () => {
+    it('returns the create ids when action is set', () => {
+      const result = getProfileSelectionMessageIds({
+        action: 'set',
         resourceTypeURL: 'work_URL' as ResourceTypeURL,
-      } as const;
+      });
 
-      const result = getLabelId({ labels, profileSelectionType });
+      expect(result).toEqual({ titleId: 'ld.newType', submitId: 'ld.create.base' });
+    });
 
-      expect(result).toBe('defaultLabel');
+    it('returns the change ids when action is change', () => {
+      const result = getProfileSelectionMessageIds({
+        action: 'change',
+        resourceTypeURL: 'instance_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toEqual({ titleId: 'ld.changeTypeProfile', submitId: 'ld.change' });
+    });
+  });
+
+  describe('getResourceTypeLabelId', () => {
+    it('resolves the work label id from the work URL', () => {
+      const result = getResourceTypeLabelId('http://bibfra.me/vocab/lite/Work' as ResourceTypeURL);
+
+      expect(result).toBe('ld.work');
+    });
+
+    it('resolves the authority label id from the canonical authority URL', () => {
+      const result = getResourceTypeLabelId('http://bibfra.me/vocab/lite/Authority' as ResourceTypeURL);
+
+      expect(result).toBe('ld.authority');
+    });
+
+    it('falls back to the instance label id for an unknown URL', () => {
+      const result = getResourceTypeLabelId(undefined);
+
+      expect(result).toBe('ld.instance');
     });
   });
 

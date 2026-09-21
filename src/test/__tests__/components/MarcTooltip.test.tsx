@@ -1,6 +1,7 @@
 import { IntlProvider } from 'react-intl';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { MarcMapping, MarcTooltip, MarcTooltipProps } from '@/components/MarcTooltip';
 
@@ -50,5 +51,22 @@ describe('MarcTooltip', () => {
     const button = screen.getByRole('button');
     expect(button.parentElement).toHaveClass('custom-class');
     expect(button).toHaveAttribute('data-testid', expect.stringContaining('custom-id'));
+  });
+
+  describe('accessibility', () => {
+    const mapping: MarcMapping = { Title: '245 $a', Author: '100 $a' };
+
+    test.each([
+      ['mapping undefined', { mapping: undefined }],
+      ['mapping empty', { mapping: {} }],
+      ['mapping with entries', { mapping }],
+      ['custom className and htmlId', { mapping, className: 'custom-class', htmlId: 'custom-id' }],
+    ])('has no accessibility violations when %s', async (_description, props) => {
+      const { container } = renderMarcTooltip(props);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

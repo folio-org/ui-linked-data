@@ -1,7 +1,27 @@
 @use '@/common/styles/common.scss' as *;
 
+.profile-settings-editor-landing {
+  padding: 25px 20%;
+  text-align: center;
+  font-size: 120%;
+  max-width: 915px;
+}
+
 .components-editor-wrapper {
   container-type: inline-size;
+
+  .settings-name-edit {
+    max-width: 915px;
+    padding: 0 15px 15px;
+
+    label {
+      white-space: nowrap;
+    }
+  }
+
+  .reset-components {
+    padding: 0 15px 15px;
+  }
 }
 
 .components-editor {

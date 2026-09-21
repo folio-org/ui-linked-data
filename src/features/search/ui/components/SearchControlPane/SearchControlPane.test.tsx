@@ -1,6 +1,9 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
+import { ComponentProps } from 'react';
+
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSearchStore, useUIStore } from '@/store';
 
@@ -378,5 +381,87 @@ describe('SearchControlPane', () => {
 
     const formattedMessage = screen.getByTestId('formatted-message-ld.recordsFound');
     expect(formattedMessage).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['with label', { componentProps: { label: 'Test Label' } }],
+      ['with ReactElement label', { componentProps: { label: <div>Custom Label</div> } }],
+      ['with children', { componentProps: { label: 'Test', children: <div>Child Content</div> } }],
+      [
+        'with sublabel shown',
+        {
+          contextOverride: {
+            activeUIConfig: {
+              ui: { titleId: undefined, subtitleId: undefined },
+              features: { isVisibleSubLabel: false },
+            },
+            results: { totalRecords: 25 },
+          },
+          componentProps: {
+            label: 'Test',
+            showSubLabel: true,
+            renderSubLabel: (count: number) => <span>Total: {count}</span>,
+          },
+        },
+      ],
+      ['without label', { componentProps: {} }],
+      [
+        'with context titleId',
+        {
+          contextOverride: {
+            activeUIConfig: {
+              ui: { titleId: 'ld.resources', subtitleId: undefined },
+              features: { isVisibleSubLabel: false },
+            },
+          },
+          componentProps: {},
+        },
+      ],
+      [
+        'with subtitle from context',
+        {
+          contextOverride: {
+            activeUIConfig: {
+              ui: { titleId: 'ld.resources', subtitleId: 'ld.recordsFound' },
+              features: { isVisibleSubLabel: true },
+            },
+            results: { totalRecords: 42 },
+          },
+          componentProps: {},
+        },
+      ],
+    ] as [
+      string,
+      { contextOverride?: Record<string, unknown>; componentProps: ComponentProps<typeof SearchControlPane> },
+    ][])('has no accessibility violations when %s', async (_description, { contextOverride, componentProps }) => {
+      if (contextOverride) {
+        mockUseSearchContext.mockReturnValue(contextOverride);
+      }
+
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            pageMetadata: {
+              totalElements: 25,
+            },
+          },
+        },
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed: false,
+            setIsSearchPaneCollapsed: mockSetIsSearchPaneCollapsed,
+          },
+        },
+      ]);
+
+      const { container } = render(<SearchControlPane {...componentProps} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

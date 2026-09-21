@@ -3,6 +3,7 @@ import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToE
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ITitledPreview, TitledPreview } from './TitledPreview';
 
@@ -56,5 +57,18 @@ describe('TitledPreview', () => {
     fireEvent.click(getByTestId('preview-actions-dropdown__option-ld.edit'));
 
     expect(navigateToEditPage).toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ["there's preview content", defaultProps],
+      ["there's no preview content", { ...defaultProps, previewContent: undefined }],
+    ])('has no accessibility violations when %s', async (_description, props) => {
+      const { container } = renderWithProps(props);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

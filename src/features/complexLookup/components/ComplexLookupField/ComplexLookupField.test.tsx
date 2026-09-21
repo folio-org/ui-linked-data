@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 
@@ -34,12 +35,6 @@ jest.mock('../ComplexLookupSelectedItem', () => ({
   ),
 }));
 
-jest.mock('@/components/Input', () => ({
-  Input: ({ value, disabled, ...props }: { value?: string; disabled?: boolean; [key: string]: unknown }) => (
-    <input value={value} disabled={disabled} {...props} />
-  ),
-}));
-
 const MockModal = ({
   isOpen,
   onClose,
@@ -67,9 +62,10 @@ describe('ComplexLookupField', () => {
   const mockHandleAssign = jest.fn();
   const mockHandleDelete = jest.fn();
 
+  const testHtmlId = 'test-html-id';
   const defaultEntry: SchemaEntry = {
     uuid: 'test-uuid',
-    htmlId: 'test-html-id',
+    htmlId: testHtmlId,
     layout: {
       api: ComplexLookupType.Hub,
       isNew: true,
@@ -275,6 +271,63 @@ describe('ComplexLookupField', () => {
           lookupType: undefined,
         }),
       );
+    });
+  });
+
+  describe('accessibility', () => {
+    const twoValues = [
+      { id: '1', label: 'Item 1', meta: {} },
+      { id: '2', label: 'Item 2', meta: {} },
+    ];
+
+    test.each([
+      [
+        'read-only input when isNew is false',
+        { entry: { ...defaultEntry, layout: { ...defaultEntry.layout, isNew: false } } },
+        {},
+      ],
+      [
+        'read-only input with formatted value',
+        {
+          entry: { ...defaultEntry, layout: { ...defaultEntry.layout, isNew: false } },
+          value: twoValues,
+        },
+        { localValue: twoValues },
+      ],
+      ['interactive field with button', { entry: defaultEntry }, {}],
+      [
+        'selected items when value exists',
+        { entry: defaultEntry, value: twoValues },
+        { localValue: twoValues, buttonLabelId: 'ld.change' },
+      ],
+      ['modal open', { entry: defaultEntry }, { isModalOpen: true }],
+      [
+        'modal open with initialQuery',
+        { entry: defaultEntry, value: [{ id: '1', label: 'Test Query', meta: {} }] },
+        { localValue: [{ id: '1', label: 'Test Query', meta: {} }], isModalOpen: true },
+      ],
+      ['modalConfig is null', { entry: defaultEntry }, { modalConfig: null, isModalOpen: true }],
+      [
+        'lookupType is undefined',
+        { entry: { ...defaultEntry, layout: { ...defaultEntry.layout, api: undefined } } },
+        {},
+      ],
+    ])('has no accessibility violations when %s', async (_description, componentProps, hookOverrides) => {
+      (ComplexLookupHooks.useComplexLookupField as jest.Mock).mockReturnValue({
+        ...defaultHookReturn,
+        ...hookOverrides,
+      });
+
+      const { container } = render(
+        <div>
+          <div id={testHtmlId}>{testHtmlId}</div>
+          <ComplexLookupField onChange={mockOnChange} {...componentProps} />
+        </div>,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -9,12 +9,28 @@
 * Refactor imports and add import boundary rules. Refs [UILD-816].
 * Fix regression issues that appeared after refactoring. Refs [UILD-816], [UILD-827].
 * Add Authority edit page. Refs [UILD-826].
+* Extend Search page with Authority search and create options. Refs [UILD-825].
+* Fix field collision in the record generation. Fixes [UILD-838].
+* Update language used for importing works/instances. Refs [UILD-839].
+* Fix multiple settings per profile. Refs [UILD-780].
+* Add accessibility tests. Refs [UILD-841].
+* Add accessible labels to buttons. Refs [UILD-855].
+* Address ManageProfileSettings tests and missing dependencies. Fixes [UILD-859].
+* Fix authority labels not rendering. Refs [UILD-842].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
 [UILD-816]:https://folio-org.atlassian.net/browse/UILD-816
 [UILD-821]:https://folio-org.atlassian.net/browse/UILD-821
 [UILD-827]:https://folio-org.atlassian.net/browse/UILD-827
 [UILD-826]:https://folio-org.atlassian.net/browse/UILD-826
+[UILD-825]:https://folio-org.atlassian.net/browse/UILD-825
+[UILD-838]:https://folio-org.atlassian.net/browse/UILD-838
+[UILD-839]:https://folio-org.atlassian.net/browse/UILD-839
+[UILD-780]:https://folio-org.atlassian.net/browse/UILD-780
+[UILD-841]:https://folio-org.atlassian.net/browse/UILD-841
+[UILD-855]:https://folio-org.atlassian.net/browse/UILD-855
+[UILD-859]:https://folio-org.atlassian.net/browse/UILD-859
+[UILD-842]:https://folio-org.atlassian.net/browse/UILD-842
 
 ## 2.0.4 (2026-06-03)
 * Fix default profile type persistence across edit form and profile settings. Fixes [UILD-820].

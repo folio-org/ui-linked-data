@@ -27,6 +27,14 @@ type ProfileDTO = {
   resourceType: string;
 };
 
+type ProfileSettingsMeta = {
+  id: string | number;
+  profileId: string | number;
+  name: string;
+};
+
+type ProfileSettingsMetaList = ProfileSettingsMeta[];
+
 type ProfileSettingsChildProperties = {
   id: string;
   visible: boolean;

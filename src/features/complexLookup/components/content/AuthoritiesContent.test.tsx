@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { AuthoritiesContent } from './AuthoritiesContent';
 
@@ -308,6 +309,32 @@ describe('AuthoritiesContent', () => {
       expect(screen.queryByTestId('authorities-result-list')).not.toBeInTheDocument();
       expect(screen.queryByTestId('control-pane')).not.toBeInTheDocument();
       expect(screen.queryByTestId('content-container')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    const baseProps = {
+      isMarcPreviewOpen: false,
+      isMarcLoading: false,
+      handleAuthoritiesAssign: mockHandleAuthoritiesAssign,
+      handleTitleClick: mockHandleTitleClick,
+      handleCloseMarcPreview: mockHandleCloseMarcPreview,
+    };
+
+    test.each([
+      ['result list view', {}],
+      ['result list view with checkFailedId', { checkFailedId: mockCheckFailedId }],
+      ['result list view with notSpecifiedLabel', { notSpecifiedLabel: 'Localized fallback' }],
+      ['MARC preview is loading', { isMarcPreviewOpen: true, isMarcLoading: true }],
+      ['MARC preview is open', { isMarcPreviewOpen: true }],
+      ['MARC preview is open without complex flow', { isMarcPreviewOpen: true, hasComplexFlow: false }],
+      ['MARC preview is open with checkFailedId', { isMarcPreviewOpen: true, checkFailedId: mockCheckFailedId }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<AuthoritiesContent {...baseProps} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -1,6 +1,7 @@
 import '@/test/__mocks__/lib/react-select.mock';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { DropdownField } from '@/components/DropdownField';
 
@@ -14,7 +15,7 @@ describe('Dropdown Field', () => {
   const { getByTestId } = screen;
 
   function renderComponent() {
-    render(<DropdownField options={options} uuid={uuid} onChange={onChangeFn} value={options[0]} />);
+    return render(<DropdownField options={options} uuid={uuid} onChange={onChangeFn} value={options[0]} />);
   }
 
   test('triggers onChange', () => {
@@ -28,5 +29,20 @@ describe('Dropdown Field', () => {
     fireEvent.change(getByTestId('dropdown-field'), event);
 
     expect(onChangeFn).toHaveBeenCalledWith(options[0], uuid, true);
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = render(
+        <div>
+          <div id="label">label</div>
+          <DropdownField options={options} uuid={uuid} onChange={onChangeFn} value={options[0]} htmlId="label" />
+        </div>,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

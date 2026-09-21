@@ -5,6 +5,9 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
+
+import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
@@ -30,6 +33,10 @@ jest.mock('../../hooks/useSaveProfileSettings', () => ({
 
 describe('ModalCloseProfileSettings', () => {
   const mockSetSelectedProfile = jest.fn();
+  const mockSetMode = jest.fn();
+  const mockSetSelectedProfileSettingsMeta = jest.fn();
+  const mockSetIsPreferredProfileSettings = jest.fn();
+  const mockSetSettingsName = jest.fn();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -55,6 +62,49 @@ describe('ModalCloseProfileSettings', () => {
     renderComponent();
 
     expect(screen.getByTestId('modal-close-profile-settings')).toBeInTheDocument();
+  });
+
+  it('renders modal component with component warning when not in landing mode', () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          mode: ProfileSettingsMode.Editing,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    expect(screen.getByTestId('modal-close-profile-settings')).toBeInTheDocument();
+    expect(screen.getByText('ld.unsavedProfileNote')).toBeInTheDocument();
+  });
+
+  it('renders modal component without component warning when in landing mode', () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          mode: ProfileSettingsMode.Landing,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    expect(screen.getByTestId('modal-close-profile-settings')).toBeInTheDocument();
+    expect(screen.queryByText('ld.unsavedProfileNote')).not.toBeInTheDocument();
+  });
+
+  it('when closing modal, do not save or navigate', async () => {
+    renderComponent();
+
+    fireEvent.click(screen.getByLabelText('ld.aria.modal.close'));
+
+    await waitFor(() => {
+      expect(mockUseNavigate).not.toHaveBeenCalled();
+      expect(mockSaveSettings).not.toHaveBeenCalled();
+    });
   });
 
   it('when closing view, continue without saving sets up view close', async () => {
@@ -110,6 +160,7 @@ describe('ModalCloseProfileSettings', () => {
             resourceTypeURL: 'test-resource',
           },
           setSelectedProfile: mockSetSelectedProfile,
+          setMode: mockSetMode,
         },
       },
       {
@@ -129,6 +180,7 @@ describe('ModalCloseProfileSettings', () => {
       expect(mockSetSelectedProfile).toHaveBeenCalled();
       expect(mockSetIsManageProfileSettingsShowEditor).toHaveBeenCalledWith(true);
       expect(mockSetIsManageProfileSettingsShowProfiles).toHaveBeenCalledWith(false);
+      expect(mockSetMode).toHaveBeenCalledWith(ProfileSettingsMode.Landing);
     });
   });
 
@@ -164,6 +216,95 @@ describe('ModalCloseProfileSettings', () => {
       expect(mockSetSelectedProfile).toHaveBeenCalled();
       expect(mockSetIsManageProfileSettingsShowEditor).toHaveBeenCalledWith(true);
       expect(mockSetIsManageProfileSettingsShowProfiles).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it('when creating new settings next, move to creating mode with no settings meta selected', async () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          isClosingNext: false,
+          nextSelectedProfile: null,
+          isCreatingSettingsNext: true,
+          setMode: mockSetMode,
+          setSelectedProfileSettingsMeta: mockSetSelectedProfileSettingsMeta,
+          setIsPreferredProfileSettings: mockSetIsPreferredProfileSettings,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    await waitFor(() => {
+      expect(mockSetMode).toHaveBeenCalledWith(ProfileSettingsMode.Creating);
+      expect(mockSetSelectedProfileSettingsMeta).toHaveBeenCalledWith(null);
+      expect(mockSetIsPreferredProfileSettings).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it('when editing existing settings next, move to editing mode with next settings meta selected ', async () => {
+    const settingsMeta = { id: 'meta', name: 'edit-name' };
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          isClosingNext: false,
+          nextSelectedProfile: null,
+          isCreatingSettingsNext: false,
+          isEditingSettingsNext: true,
+          nextSelectedSettingsMeta: settingsMeta,
+          setMode: mockSetMode,
+          setSelectedProfileSettingsMeta: mockSetSelectedProfileSettingsMeta,
+          setSettingsName: mockSetSettingsName,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    await waitFor(() => {
+      expect(mockSetMode).toHaveBeenCalledWith(ProfileSettingsMode.Editing);
+      expect(mockSetSelectedProfileSettingsMeta).toHaveBeenCalledWith(settingsMeta);
+      expect(mockSetSettingsName).toHaveBeenCalledWith('edit-name');
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default state', () => {}],
+      [
+        'not in landing mode',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsState,
+              state: { mode: ProfileSettingsMode.Editing },
+            },
+          ]),
+      ],
+      [
+        'in landing mode',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsState,
+              state: { mode: ProfileSettingsMode.Landing },
+            },
+          ]),
+      ],
+    ])('has no accessibility violations when %s', async (_description, setup) => {
+      setup();
+
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

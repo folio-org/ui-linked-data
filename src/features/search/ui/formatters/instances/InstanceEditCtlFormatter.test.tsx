@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import type { Row } from '@/components/Table';
@@ -105,5 +106,17 @@ describe('InstanceEditCtlFormatter', () => {
     render(<InstanceEditCtlFormatter row={mockRow} formatMessage={formatMessage} onEdit={onEdit} />);
 
     expect(screen.getByRole('button')).toHaveAttribute('data-type', 'primary');
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = render(
+        <InstanceEditCtlFormatter row={mockRow} formatMessage={formatMessage} onEdit={onEdit} />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -19,6 +19,7 @@ import type { ProcessedResource } from '../types';
 
 type ProcessResourceParams = {
   record?: RecordEntry;
+  profileSettingsId?: string;
   asClone?: boolean;
 };
 
@@ -35,7 +36,11 @@ export const useResourceProcessing = () => {
   const { formatMessage } = useIntl();
 
   const processResource = useCallback(
-    async ({ record, asClone = false }: ProcessResourceParams = {}): Promise<ProcessedResource | null> => {
+    async ({
+      record,
+      profileSettingsId,
+      asClone = false,
+    }: ProcessResourceParams = {}): Promise<ProcessedResource | null> => {
       const loadLookup = (uri: string) => queryClient.ensureQueryData(generateLookupQueryOptions(uri));
       const pipeline = createSchemaPipeline(sharedInfra, loadLookup);
 
@@ -53,9 +58,11 @@ export const useResourceProcessing = () => {
         pipeline,
         record,
         profileIdParam,
+        profileSettingsId,
         typeParam,
         asClone,
         templateMetadata,
+        queryClient,
         loadProfile,
         loadProfileSettings,
       });

@@ -1,0 +1,12 @@
+// TODO: create a common style for search results.
+.authority-link {
+  font-weight: 400;
+}
+
+button.authority-link {
+  text-align: left;
+
+  &:hover {
+    text-decoration-line: underline;
+  }
+}

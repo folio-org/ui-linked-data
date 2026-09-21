@@ -73,6 +73,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
   [ResourceType.authority]: {
     type: ResourceType.authority,
     uri: BFLITE_URIS.AUTHORITY,
+    resourceTypeUri: BFLITE_URIS.AUTHORITY_RESOURCE_TYPE,
     profileBfid: PROFILE_BFIDS.AUTHORITY,
     defaultProfileId: 8,
     profileChildren: ['Profile:Authority'],
@@ -81,7 +82,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       hasPreview: false,
       editPageLayout: 'single',
     },
-    labelId: 'ld.hub',
+    labelId: 'ld.authority',
     search: {
       segment: 'authorities',
     },

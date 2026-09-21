@@ -1,6 +1,7 @@
 import { MemoryRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Footer } from './Footer';
 
@@ -104,6 +105,36 @@ describe('Footer', () => {
       renderFooter();
 
       expect(screen.getByTestId('record-controls')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['external resource route with no data', () => setActiveRoute(2)],
+      [
+        'external resource route with data',
+        () => {
+          setActiveRoute(2);
+          mockUseResourcePreviewQuery.mockReturnValue({ data: { record: {} } });
+        },
+      ],
+      ['hub import route with no data', () => setActiveRoute(3)],
+      [
+        'hub import route with data',
+        () => {
+          setActiveRoute(3);
+          mockUseHubQuery.mockReturnValue({ data: { resource: {} } });
+        },
+      ],
+      ['edit route', () => setActiveRoute(1)],
+    ])('has no accessibility violations when %s', async (_description, setup) => {
+      setup();
+
+      const { container } = renderFooter();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

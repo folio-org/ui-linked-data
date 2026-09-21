@@ -2,6 +2,7 @@ import * as ReactRouterDom from 'react-router-dom';
 
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { act, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { PreviewExternalResourceControls } from '@/views/ExternalResource/components/PreviewExternalResourceControls';
 
@@ -56,6 +57,16 @@ describe('PreviewExternalResourceControls', () => {
       fireEvent.click(screen.getByTestId('close-external-preview-button'));
 
       expect(navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

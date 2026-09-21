@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useMarcPreviewStore } from '@/store';
 
@@ -49,5 +50,22 @@ describe('ViewMarcModal', () => {
 
     expect(await findByText(leader, { exact: false })).toBeInTheDocument();
     expect(await findByText(subfieldContent, { exact: false })).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      setInitialGlobalState([
+        {
+          store: useMarcPreviewStore,
+          state: { basicValue: mockMarcPreview },
+        },
+      ]);
+
+      const { container } = render(<ModalViewMarc />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

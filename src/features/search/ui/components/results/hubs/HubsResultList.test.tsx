@@ -2,6 +2,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Row } from '@/components/Table';
 
@@ -43,7 +44,7 @@ describe('HubsResultList', () => {
   };
 
   const renderComponent = () => {
-    render(
+    return render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <HubsResultList />
@@ -128,5 +129,17 @@ describe('HubsResultList', () => {
     renderComponent();
 
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
+
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

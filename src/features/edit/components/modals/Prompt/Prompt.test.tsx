@@ -5,6 +5,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useConfigStore, useLoadingStateStore } from '@/store';
 
@@ -118,5 +119,20 @@ describe('Prompt', () => {
     renderPrompt(false);
 
     expect(mockResetIsLoading).not.toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['navigation is blocked', true],
+      ['navigation is not blocked', false],
+    ])('has no accessibility violations when %s', async (_description, isBlocking) => {
+      cleanup();
+
+      const { container } = renderPrompt(isBlocking);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

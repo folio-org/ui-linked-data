@@ -413,4 +413,100 @@ describe('record.helper', () => {
       expect(result).toEqual(['lde:Profile:Instance']);
     });
   });
+
+  describe('preserveReferenceData', () => {
+    const mockGenerated = {
+      resource: {
+        work: {
+          exists: 'yes',
+        },
+      },
+    };
+    const mockSource = {
+      resource: {
+        work: {
+          _ref: [
+            {
+              title: [
+                {
+                  title: 'source',
+                },
+              ],
+              profileId: 1,
+            },
+          ],
+        },
+      },
+    } as unknown as RecordEntry;
+    const mockBlocks = {
+      block: 'work',
+      reference: {
+        key: '_ref',
+        name: 'instance',
+        uri: 'instance-uri',
+      },
+    };
+    const mockMerged = {
+      resource: {
+        work: {
+          exists: 'yes',
+          _ref: [
+            {
+              title: [
+                {
+                  title: 'source',
+                },
+              ],
+              profileId: 1,
+            },
+          ],
+        },
+      },
+    };
+
+    test('returns source if generated is effectively empty', () => {
+      const result = RecordHelper.preserveReferenceData({ resource: {} }, mockSource, mockBlocks);
+
+      expect(result).toBe(mockSource);
+    });
+
+    test('returns undefined if generated is undefined', () => {
+      const result = RecordHelper.preserveReferenceData(undefined, mockSource, mockBlocks);
+
+      expect(result).toBeUndefined();
+    });
+
+    test('returns generated if selected record blocks not provided', () => {
+      const result = RecordHelper.preserveReferenceData(mockGenerated, mockSource);
+
+      expect(result).toBe(mockGenerated);
+    });
+
+    test('returns generated if no block in selected record blocks', () => {
+      const result = RecordHelper.preserveReferenceData(mockGenerated, mockSource, {
+        reference: { key: 'any', uri: 'any' },
+      });
+
+      expect(result).toBe(mockGenerated);
+    });
+
+    test('returns generated if no key in selected record blocks', () => {
+      const result = RecordHelper.preserveReferenceData(mockGenerated, mockSource, { block: 'any' });
+
+      expect(result).toBe(mockGenerated);
+    });
+
+    test('returns generated if block not present in generated resource', () => {
+      const generated = { resource: { hub: {} } };
+      const result = RecordHelper.preserveReferenceData(generated, mockSource, mockBlocks);
+
+      expect(result).toBe(generated);
+    });
+
+    test('properly merges generated and source when conditions line up', () => {
+      const result = RecordHelper.preserveReferenceData(mockGenerated, mockSource, mockBlocks);
+
+      expect(result).toEqual(mockMerged);
+    });
+  });
 });

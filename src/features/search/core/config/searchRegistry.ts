@@ -1,5 +1,8 @@
 import type { SearchTypeConfig } from '../types';
 import { authoritiesBrowseConfig } from './authoritiesBrowse.config';
+import { authoritiesLDConfig } from './authoritiesLD.config';
+import { authoritiesLocChildrenConfig } from './authoritiesLocChildren.config';
+import { authoritiesMarcConfig } from './authoritiesMarc.config';
 import { authoritiesSearchConfig } from './authoritiesSearch.config';
 import { hubsLibraryOfCongressConfig } from './hubsLibraryOfCongress.config';
 import { hubsLocalConfig } from './hubsLocal.config';
@@ -17,7 +20,13 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   // Resources (simple type)
   resources: resourcesConfig,
 
-  // Authorities variants
+  // Authorities page variants (source-keyed, flat search - no sub-segments)
+  authorities: authoritiesLDConfig,
+  'authorities:ld': authoritiesLDConfig,
+  'authorities:marc': authoritiesMarcConfig,
+  'authorities:locChildren': authoritiesLocChildrenConfig,
+
+  // Authorities complex-lookup variants (search / browse sub-segments)
   'authorities:search': authoritiesSearchConfig,
   'authorities:browse': authoritiesBrowseConfig,
 

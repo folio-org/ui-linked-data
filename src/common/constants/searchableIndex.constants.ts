@@ -15,6 +15,17 @@ export enum SearchableIndex {
   HubNameKeyword = 'hubNameKeyword',
   Title = 'title',
   Contributor = 'contributor',
+  // LD Authority / combined authority SearchBy options
+  Family = 'family',
+  Form = 'form',
+  Jurisdiction = 'jurisdiction',
+  Meeting = 'meeting',
+  Organization = 'organization',
+  Person = 'person',
+  Place = 'place',
+  Temporal = 'temporal',
+  Topic = 'topic',
+  ComplexSubject = 'complexSubject',
 }
 
 export enum SearchableIndexQuerySelector {

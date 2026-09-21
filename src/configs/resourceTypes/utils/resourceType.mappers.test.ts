@@ -58,6 +58,14 @@ describe('resourceType.mappers', () => {
       expect(mapUriToResourceType(uri)).toBe(ResourceType.instance);
     });
 
+    it('Maps the canonical authority URI to ResourceType.authority', () => {
+      expect(mapUriToResourceType('http://bibfra.me/vocab/lite/Authority')).toBe(ResourceType.authority);
+    });
+
+    it('Maps the internal authority record token to ResourceType.authority', () => {
+      expect(mapUriToResourceType('_authority')).toBe(ResourceType.authority);
+    });
+
     it('Returns undefined for null', () => {
       expect(mapUriToResourceType(null)).toBeUndefined();
     });

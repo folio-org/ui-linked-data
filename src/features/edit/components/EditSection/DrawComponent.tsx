@@ -16,6 +16,7 @@ import { getPlaceholderForProperty } from '@/features/search/ui';
 
 import { FieldWithMetadataAndControls } from '../FieldWithMetadataAndControls';
 import { BlockActions } from './BlockActions';
+import { ProfileSettingsSelector } from './ProfileSettingsSelector';
 import { EditSectionDataProps } from './renderDrawComponent';
 
 export type IDrawComponent = {
@@ -67,6 +68,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
               <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />
             </Button>
           )}
+          <ProfileSettingsSelector />
           <BlockActions entry={entry} />
         </div>
       </FieldWithMetadataAndControls>

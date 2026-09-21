@@ -1,11 +1,13 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { SearchTypeConfig } from '@/features/search/core/types';
 
 import { useSearchStore } from '@/store';
 
+import type { SearchProviderProps } from '../../types/provider.types';
 import { Search } from './Search';
 
 const mockConfig = {
@@ -227,6 +229,57 @@ describe('Search', () => {
       );
 
       expect(container).toBeEmptyDOMElement();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      [
+        'static mode with required props',
+        { coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' as const, children: <div>Search Content</div> },
+      ],
+      [
+        'static mode="auto"',
+        {
+          coreConfig: mockConfig,
+          uiConfig: mockUIConfig,
+          flow: 'url' as const,
+          mode: 'auto' as const,
+          children: <div>Auto Mode Content</div>,
+        },
+      ],
+      [
+        'static flow="value"',
+        {
+          coreConfig: mockConfig,
+          uiConfig: mockUIConfig,
+          flow: 'value' as const,
+          children: <div>Value Flow Content</div>,
+        },
+      ],
+      [
+        'config not provided',
+        {
+          coreConfig: undefined as unknown as SearchTypeConfig,
+          uiConfig: mockUIConfig,
+          flow: 'url' as const,
+          children: <div>Should Not Render</div>,
+        },
+      ],
+      [
+        'dynamic mode with segments',
+        { segments: ['resources', 'hubs'], flow: 'url' as const, children: <div>Dynamic Mode Content</div> },
+      ],
+      [
+        'dynamic mode with empty segments',
+        { segments: [] as string[], flow: 'url' as const, children: <div>Should Not Render</div> },
+      ],
+    ] as [string, SearchProviderProps][])('has no accessibility violations when %s', async (_description, props) => {
+      const { container } = render(<Search {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

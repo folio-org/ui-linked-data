@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ModalDeleteRecord } from './ModalDeleteRecord';
 
@@ -8,12 +9,16 @@ describe('ModalDeleteRecord', () => {
   const toggleIsOpen = jest.fn();
   const deleteRecord = jest.fn();
 
+  let container: HTMLElement;
+
   beforeAll(() => {
     createModalContainer();
   });
 
   beforeEach(() => {
-    render(<ModalDeleteRecord isOpen={true} toggleIsOpen={toggleIsOpen} deleteRecord={deleteRecord} />);
+    ({ container } = render(
+      <ModalDeleteRecord isOpen={true} toggleIsOpen={toggleIsOpen} deleteRecord={deleteRecord} />,
+    ));
   });
 
   test('renders modal component', () => {
@@ -30,5 +35,13 @@ describe('ModalDeleteRecord', () => {
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
 
     expect(toggleIsOpen).toHaveBeenCalledWith(false);
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

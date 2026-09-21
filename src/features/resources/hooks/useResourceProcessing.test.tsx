@@ -66,7 +66,7 @@ describe('useResourceProcessing', () => {
     (getEditingRecordBlocks as jest.Mock).mockReturnValue(undefined);
   });
 
-  it('calls buildProcessedResource with typeParam and profileIdParam from URL', async () => {
+  it('calls buildProcessedResource with typeParam, profileIdParam from URL', async () => {
     const { result } = renderHook(() => useResourceProcessing(), { wrapper });
 
     await result.current.processResource({});

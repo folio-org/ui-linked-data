@@ -2,6 +2,7 @@ export { BaseResponseTransformer } from './BaseResponseTransformer';
 export { StandardResponseTransformer } from './StandardResponseTransformer';
 export { AuthoritiesSearchResponseTransformer } from './AuthoritiesSearchResponseTransformer';
 export { AuthoritiesBrowseResponseTransformer } from './AuthoritiesBrowseResponseTransformer';
+export { LDAuthoritiesResponseTransformer } from './LDAuthoritiesResponseTransformer';
 export { ResourcesResponseTransformer } from './ResourcesResponseTransformer';
 export { HubResponseTransformer } from './HubResponseTransformer';
 export { HubLocalResponseTransformer } from './HubLocalResponseTransformer';

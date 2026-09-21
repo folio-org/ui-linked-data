@@ -3,6 +3,7 @@ import { type SliceState } from '../utils/slice';
 
 type SelectedProfileType = Profile | null;
 type InitialSchemaKeyType = string | null;
+type SelectedProfileSettingsIdType = string | null;
 export type AvailableProfiles = {
   [key in ResourceTypeURL]: ProfileDTO[];
 };
@@ -11,6 +12,7 @@ export type PreferredProfiles = ProfileDTO[];
 export type ProfileState = SliceState<'availableProfiles', AvailableProfiles> &
   SliceState<'preferredProfiles', PreferredProfiles> &
   SliceState<'selectedProfile', SelectedProfileType> &
+  SliceState<'selectedProfileSettingsId', SelectedProfileSettingsIdType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &
   SliceState<'schema', Map<string, SchemaEntry>>;
 
@@ -24,6 +26,9 @@ const sliceConfigs: SliceConfigs = {
     initialValue: null,
   },
   selectedProfile: {
+    initialValue: null,
+  },
+  selectedProfileSettingsId: {
     initialValue: null,
   },
   initialSchemaKey: {

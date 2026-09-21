@@ -6,16 +6,19 @@ import { Button, ButtonType } from '@/components/Button';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
+import { useResetSettings } from '../../hooks';
+
 type ResourceProfileProps = {
   profile: ProfileDTO;
   selected: boolean;
 };
 
 export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected }) => {
-  const { setNextSelectedProfile, setSelectedProfile, isModified } = useManageProfileSettingsState([
+  const { isModified, resetMode, setNextSelectedProfile, setSelectedProfile } = useManageProfileSettingsState([
+    'isModified',
+    'resetMode',
     'setNextSelectedProfile',
     'setSelectedProfile',
-    'isModified',
   ]);
   const {
     setIsManageProfileSettingsUnsavedModalOpen,
@@ -26,6 +29,7 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
     'setIsManageProfileSettingsShowProfiles',
     'setIsManageProfileSettingsShowEditor',
   ]);
+  const { resetSettings } = useResetSettings();
 
   const handleClick = () => {
     if (selected) {
@@ -36,6 +40,8 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
       setIsManageProfileSettingsUnsavedModalOpen(true);
     } else {
       setSelectedProfile(profile);
+      resetSettings();
+      resetMode();
       setIsManageProfileSettingsShowProfiles(false);
       setIsManageProfileSettingsShowEditor(true);
     }

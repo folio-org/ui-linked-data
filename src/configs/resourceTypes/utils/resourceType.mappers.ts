@@ -27,6 +27,10 @@ const URI_TO_RESOURCE_TYPE_MAP: Record<string, ResourceType> = Object.values(RES
   (acc, config) => {
     acc[config.uri] = config.type;
 
+    if (config.resourceTypeUri) {
+      acc[config.resourceTypeUri] = config.type;
+    }
+
     return acc;
   },
   {} as Record<string, ResourceType>,

@@ -1,6 +1,7 @@
 import { MemoryRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as SearchHooks from '../../hooks';
 import * as SearchProvider from '../../providers';
@@ -180,5 +181,58 @@ describe('SearchContentContainer', () => {
     const placeholder = screen.getByTestId('empty-placeholder');
     expect(placeholder).toBeInTheDocument();
     expect(screen.queryByText('Should Not Render')).not.toBeInTheDocument();
+  });
+
+  interface AccessibilityVariant {
+    context: Record<string, unknown>;
+    query: string;
+    children?: React.ReactNode;
+    message?: string;
+    emptyPlaceholderClassName?: string;
+  }
+
+  describe('accessibility', () => {
+    test.each([
+      [
+        'data exists',
+        {
+          context: { results: { items: [{ id: '1', title: 'Test' }], totalRecords: 1 } },
+          query: 'test query',
+          children: <div>Search Results</div>,
+        },
+      ],
+      ['no data and no message', { context: { results: undefined }, query: '' }],
+      ['message provided', { context: { results: undefined }, query: '', message: 'ld.noResults' }],
+      [
+        'custom empty placeholder className',
+        { context: { results: undefined }, query: '', emptyPlaceholderClassName: 'custom-empty-class' },
+      ],
+      [
+        'empty array data',
+        {
+          context: { results: { items: [], totalRecords: 0 } },
+          query: '',
+          children: <div>Should Not Render</div>,
+        },
+      ],
+    ] as [string, AccessibilityVariant][])(
+      'has no accessibility violations when %s',
+      async (_description, { context, query, children, message, emptyPlaceholderClassName }) => {
+        mockUseSearchContext(context);
+        mockUseCommittedSearchParams(query);
+
+        const { container } = render(
+          <MemoryRouter>
+            <SearchContentContainer message={message} emptyPlaceholderClassName={emptyPlaceholderClassName}>
+              {children}
+            </SearchContentContainer>
+          </MemoryRouter>,
+        );
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
+      },
+    );
   });
 });

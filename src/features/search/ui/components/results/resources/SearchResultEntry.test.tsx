@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSearchStore, useUIStore } from '@/store';
 
@@ -203,6 +204,40 @@ describe('SearchResultEntry', () => {
 
     test('shows placeholder when there are no instances', () => {
       expect(getByText('ld.noInstancesAvailable')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    beforeEach(() => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            data: [],
+            query: '',
+            searchBy: 'keyword',
+            selectedInstances: [],
+            setSelectedInstances: jest.fn(),
+          },
+        },
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed: false,
+          },
+        },
+      ]);
+    });
+
+    test.each([
+      ['with instances', mockProps],
+      ['without instances', { ...mockProps, instances: [] }],
+    ])('has no accessibility violations when %s', async (_description, props) => {
+      const { container } = renderWithProviders(<SearchResultEntry {...(props as unknown as WorkAsSearchResultDTO)} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 
@@ -47,5 +48,26 @@ describe('SearchContent', () => {
     const wrapper = container.firstChild as HTMLElement;
     expect(wrapper).toBeInTheDocument();
     expect(wrapper).toHaveClass(DOM_ELEMENTS.classNames.itemSearchContent);
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['single child', <div data-testid="test-child">Test Content</div>],
+      [
+        'multiple children',
+        <>
+          <div data-testid="child-1">First Child</div>
+          <div data-testid="child-2">Second Child</div>
+          <div data-testid="child-3">Third Child</div>
+        </>,
+      ],
+      ['no children', null],
+    ])('has no accessibility violations when %s', async (_description, children) => {
+      const { container } = render(<SearchContent>{children}</SearchContent>);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

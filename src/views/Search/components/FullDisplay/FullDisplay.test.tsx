@@ -2,10 +2,10 @@ import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-import { Fragment, ReactNode } from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Edit } from '@/views';
 import { FullDisplay } from '@/views/Search/components/FullDisplay';
@@ -23,22 +23,9 @@ const mockUseResourcePreviewQuery = useResourcePreviewQuery as jest.Mock;
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
-jest.mock('react-intl', () => ({
-  FormattedMessage: ({ id, values }: never) => {
-    return (
-      <div id={id}>
-        {Object.entries(values ?? {})?.map(([k, v]) => (
-          <Fragment key={k}>{v as ReactNode}</Fragment>
-        ))}
-      </div>
-    );
-  },
-  useIntl: () => ({
-    formatMessage: ({ id }: { id: string }) => id,
-  }),
-}));
-
 describe('FullDisplay', () => {
+  let container: HTMLElement;
+
   beforeEach(() => {
     mockUseResourcePreviewQuery.mockImplementation((id: string) => ({
       data:
@@ -77,7 +64,7 @@ describe('FullDisplay', () => {
       },
     ];
 
-    return render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/'] })} />);
+    ({ container } = render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/'] })} />));
   });
 
   const { getByTestId, getAllByTestId } = screen;
@@ -97,6 +84,14 @@ describe('FullDisplay', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('edit-page')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

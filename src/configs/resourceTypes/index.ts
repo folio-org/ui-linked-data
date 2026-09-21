@@ -19,6 +19,7 @@ export {
   hasReference,
   getReference,
   getUri,
+  getResourceTypeUri,
   getDefaultProfileId,
   getProfileBfid,
   getEditSectionPassiveClass,

@@ -9,5 +9,6 @@ export { hubsLookupUIConfig } from './hubsLookupUI.config';
 
 // Table configs
 export { authoritiesTableConfig } from './results/authoritiesTable.config';
+export { authoritiesPageTableConfig } from './results/authoritiesPageTable.config';
 export { hubsLookupTableConfig } from './results/hubsLookupTable.config';
 export { instancesTableConfig } from './results/instancesTable.config';

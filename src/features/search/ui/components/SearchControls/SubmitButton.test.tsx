@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSearchStore } from '@/store';
 
@@ -118,5 +119,27 @@ describe('SubmitButton', () => {
 
     const button = screen.getByTestId('id-search-button');
     expect(button).toHaveClass('search-button', 'primary-search');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['query exists', 'test query'],
+      ['query is empty', ''],
+    ])('has no accessibility violations when %s', async (_description, query) => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query,
+          },
+        },
+      ]);
+
+      const { container } = render(<SubmitButton />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

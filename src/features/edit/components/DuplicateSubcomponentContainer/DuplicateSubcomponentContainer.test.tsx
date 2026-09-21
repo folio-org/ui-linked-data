@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { IFields } from '../Fields';
 import { DuplicateSubcomponentContainer } from './DuplicateSubcomponentContainer';
@@ -27,5 +28,21 @@ describe('DuplicateSubcomponentContainer', () => {
     expect(getByTestId('test-repeatable-subcomponent-testUuid_1')).toBeInTheDocument();
     expect(getByTestId('test-repeatable-subcomponent-clonedByUuid_1')).toBeInTheDocument();
     expect(getByTestId('test-repeatable-subcomponent-clonedByUuid_2')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = render(
+        <DuplicateSubcomponentContainer
+          entry={mockEntry}
+          twins={['clonedByUuid_1', 'clonedByUuid_2']}
+          generateComponent={mockGenerateComponent}
+        />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

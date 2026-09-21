@@ -19,13 +19,13 @@ export const Drop: FC<Props> = ({ getRootProps, getInputProps, isDragActive }) =
       {...getRootProps()}
       data-testid="dropzone"
     >
-      <input {...getInputProps()} data-testid="dropzone-file-input" />
+      <input {...getInputProps()} data-testid="dropzone-file-input" aria-labelledby="import-instructions" />
       {isDragActive ? (
         <div>
           <FormattedMessage id="ld.importFileDrop" />
         </div>
       ) : (
-        <div>
+        <div id="import-instructions">
           <FormattedMessage id="ld.importFileInstructions" />
           <div className="choose">
             <Button type={ButtonType.Highlighted} onClick={() => {}}>

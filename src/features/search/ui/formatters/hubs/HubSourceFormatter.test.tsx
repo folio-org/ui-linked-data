@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { HubSourceFormatter } from './HubSourceFormatter';
 
@@ -103,5 +104,40 @@ describe('HubSourceFormatter', () => {
     render(<HubSourceFormatter row={mockRow} />);
 
     expect(screen.getByTestId('hub-source-unique-test-id')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      [
+        'label is a string',
+        {
+          __meta: { id: 'token_1', key: 'key_1', isAnchor: false },
+          hub: { label: 'Test Hub', uri: 'http://example.com/hub_1', className: 'hub-title' },
+          source: { label: 'ld.source.libraryOfCongress', className: 'hub-source' },
+        },
+      ],
+      [
+        'label is a local source translation key',
+        {
+          __meta: { id: 'token_2', key: 'key_2', isAnchor: false },
+          hub: { label: 'Local Hub', uri: 'http://example.com/hub_2', className: 'hub-title' },
+          source: { label: 'ld.source.libraryOfCongress.local', className: 'hub-source' },
+        },
+      ],
+      [
+        'label is not a string',
+        {
+          __meta: { id: 'token_3', key: 'key_3', isAnchor: false },
+          hub: { label: 'Test Hub', uri: 'http://example.com/hub_3', className: 'hub-title' },
+          source: { label: <span>Custom Label</span>, className: 'hub-source' },
+        },
+      ],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<HubSourceFormatter row={row} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

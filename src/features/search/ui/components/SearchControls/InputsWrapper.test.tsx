@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react';
 
 import { InputsWrapper } from './InputsWrapper';
 
+// No direct accessibility test. Children are tested for this, and the
+// wrapper itself does not include any elements affecting accessibility.
+
 jest.mock('../../providers/SearchProvider', () => ({
   useSearchContext: () => ({
     mode: 'auto',

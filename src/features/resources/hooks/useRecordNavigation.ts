@@ -23,7 +23,10 @@ export const useRecordNavigation = () => {
     'setRecord',
     'setSelectedRecordBlocks',
   ]);
-  const { setSelectedProfile } = useProfileState(['setSelectedProfile']);
+  const { setSelectedProfile, resetSelectedProfileSettingsId } = useProfileState([
+    'setSelectedProfile',
+    'resetSelectedProfileSettingsId',
+  ]);
   const { setRecordStatus, addStatusMessagesItem } = useStatusState(['setRecordStatus', 'addStatusMessagesItem']);
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { dispatchUnblockEvent, dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
@@ -46,6 +49,7 @@ export const useRecordNavigation = () => {
     setRecord(null);
     setSelectedRecordBlocks(undefined);
     setSelectedProfile(null);
+    resetSelectedProfileSettingsId();
     setRecordStatus({ type: RecordStatus.close });
     dispatchUnblockEvent();
   };

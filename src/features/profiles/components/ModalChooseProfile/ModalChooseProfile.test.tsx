@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ModalChooseProfile } from './ModalChooseProfile';
 
@@ -43,11 +44,11 @@ describe('ModalChooseProfile', () => {
     expect(screen.getByTestId('modal-choose-profile-content')).toBeInTheDocument();
 
     // Check that the profile select is rendered with correct options
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     expect(selectElement).toBeInTheDocument();
 
     // Check that the dropdown has all the profile options
-    const options = screen.getAllByRole('option');
+    const options = within(selectElement).getAllByRole('option');
     expect(options).toHaveLength(mockProfiles.length);
     expect(options[0]).toHaveValue('profile_1');
     expect(options[1]).toHaveValue('profile_2');
@@ -66,7 +67,7 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    expect(screen.getByRole('combobox')).toHaveValue('profile_1');
+    expect(screen.getByTestId('select-profile')).toHaveValue('profile_1');
   });
 
   test('changes selected profile when user selects different option', () => {
@@ -81,7 +82,7 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     fireEvent.change(selectElement, { target: { value: 'profile_2' } });
 
     expect(selectElement).toHaveValue('profile_2');
@@ -125,7 +126,7 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     fireEvent.change(selectElement, { target: { value: 'profile_2' } });
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
@@ -277,7 +278,7 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     const checkbox = screen.getByRole('checkbox');
 
     // Initially profile_1 is selected and not in preferred profiles
@@ -332,5 +333,47 @@ describe('ModalChooseProfile', () => {
 
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
+  });
+
+  describe('accessibility', () => {
+    const baseProps = {
+      isOpen: true,
+      profileSelectionType: mockProfileSelectionType,
+      onCancel,
+      onSubmit,
+      onClose,
+      profiles: mockProfiles,
+    };
+
+    test.each([
+      ['default profile selection', {}],
+      [
+        'checkbox checked for preferred profile',
+        {
+          selectedProfileId: 'profile_1',
+          preferredProfiles: [
+            { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
+          ],
+          resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
+        },
+      ],
+      [
+        'checkbox unchecked for non-preferred profile',
+        {
+          selectedProfileId: 'profile_1',
+          preferredProfiles: [
+            { id: 'profile_2', name: 'Test Profile 2', resourceType: 'http://bibfra.me/vocab/lite/Instance' },
+          ],
+          resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
+        },
+      ],
+      ['isOpen is false', { isOpen: false }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<ModalChooseProfile {...baseProps} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

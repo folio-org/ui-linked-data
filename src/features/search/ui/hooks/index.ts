@@ -7,4 +7,5 @@ export { useSearchSegment } from './useSearchSegment';
 export { useFormattedResults } from './useFormattedResults';
 export { useTableFormatter } from './useTableFormatter';
 export { useHubsTableFormatter } from './useHubsTableFormatter';
+export { useAuthoritiesPageTableFormatter } from './useAuthoritiesPageTableFormatter';
 export { useHubSearchPreviewQuery } from './useHubSearchPreviewQuery';

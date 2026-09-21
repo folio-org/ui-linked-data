@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { SearchParam } from '@/features/search/core';
 
@@ -252,6 +253,43 @@ describe('SourceSelector', () => {
       const externalRadio = screen.getByLabelText<HTMLInputElement>('ld.source.external');
 
       expect(() => fireEvent.click(externalRadio)).not.toThrow();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default props', {}, { options: mockOptions, defaultValue: 'local' }],
+      [
+        'custom accordion props',
+        {},
+        {
+          options: mockOptions,
+          defaultValue: 'local',
+          accordionId: 'custom-id',
+          accordionTitleId: 'custom.title',
+          groupId: 'custom-group',
+        },
+      ],
+      ['no defaultValue provided', {}, { options: mockOptions }],
+      [
+        'navigationState source overrides defaultValue',
+        { [SearchParam.SOURCE]: 'external' },
+        { options: mockOptions, defaultValue: 'local' },
+      ],
+      ['empty options array', {}, { options: [], defaultValue: 'local' }],
+    ])('has no accessibility violations when %s', async (_description, navigationState, props) => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: { navigationState },
+        },
+      ]);
+
+      const { container } = render(<SourceSelector {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

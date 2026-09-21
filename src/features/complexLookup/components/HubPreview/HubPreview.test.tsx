@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
 
@@ -261,6 +262,31 @@ describe('HubPreview', () => {
       render(<HubPreview onClose={mockOnClose} previewData={partialData} previewMeta={mockPreviewMeta} />);
 
       expect(screen.getByTestId('preview')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    const emptyPreviewData = { id: 'hub_2', resource: {} as HubResourceData };
+
+    test.each([
+      [
+        'title from meta and assign button',
+        { previewData: mockPreviewData, previewMeta: mockPreviewMeta, onAssign: mockOnAssign },
+      ],
+      ['meta is null', { previewData: mockPreviewData, previewMeta: null }],
+      ['onAssign is not provided', { previewData: mockPreviewData, previewMeta: mockPreviewMeta }],
+      [
+        'preview resource is empty object and onAssign is provided',
+        { previewData: emptyPreviewData, previewMeta: mockPreviewMeta, onAssign: mockOnAssign },
+      ],
+      ['preview resource is empty object', { previewData: emptyPreviewData, previewMeta: mockPreviewMeta }],
+      ['preview data is null', { previewData: null, previewMeta: mockPreviewMeta }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<HubPreview onClose={mockOnClose} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

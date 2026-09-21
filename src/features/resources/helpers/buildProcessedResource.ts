@@ -1,5 +1,7 @@
+import { QueryClient } from '@tanstack/react-query';
 import { v4 as uuidv4 } from 'uuid';
 
+import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
 import { getProfileConfig } from '@/common/helpers/profile.helper';
 import {
   getAdjustedRecordContents,
@@ -10,6 +12,8 @@ import {
 import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
 import { getUri } from '@/configs/resourceTypes';
 
+import { preferredProfileSettingsOptions } from '@/features/profiles';
+
 import type { ProcessedResource } from '../types';
 import { extractProfileParams } from './resourceParams';
 
@@ -17,12 +21,15 @@ type BuildProcessedResourceParams = {
   pipeline: SchemaPipelineServices;
   record?: RecordEntry;
   profileIdParam?: string | null;
+  profileSettingsId?: string | null;
   typeParam?: string | null;
   asClone?: boolean;
   templateMetadata?: ResourceTemplateMetadata[];
+  queryClient?: QueryClient | null;
   loadProfile: (id: string | number) => Promise<Profile>;
   loadProfileSettings: (
-    id: string | number | undefined,
+    id: string | number,
+    profileId: string | number | undefined,
     profile: Profile,
     uri?: string,
   ) => Promise<ProfileSettingsWithDrift>;
@@ -32,9 +39,11 @@ export const buildProcessedResource = async ({
   pipeline,
   record,
   profileIdParam = null,
+  profileSettingsId = null,
   typeParam = null,
   asClone = false,
   templateMetadata,
+  queryClient = null,
   loadProfile,
   loadProfileSettings,
 }: BuildProcessedResourceParams): Promise<ProcessedResource | null> => {
@@ -59,8 +68,16 @@ export const buildProcessedResource = async ({
 
   if (!selectedProfile) return null;
 
+  const selectedProfileId = String(profileConfig.ids?.[0]);
+  const preferredProfileSettings = profileSettingsId
+    ? []
+    : await queryClient?.ensureQueryData(preferredProfileSettingsOptions(selectedProfileId));
+  const selectedProfileSettingsId =
+    profileSettingsId ?? preferredProfileSettings?.[0]?.id ?? PROFILE_SETTINGS_DEFAULT_OPTION;
+
   const profileSettings = await loadProfileSettings(
-    String(profileConfig.ids?.[0]),
+    selectedProfileSettingsId,
+    selectedProfileId,
     selectedProfile,
     getUri(resourceType),
   );
@@ -112,6 +129,7 @@ export const buildProcessedResource = async ({
     selectedEntries: pipeline.selectedEntriesService.get(),
     selectedRecordBlocks,
     selectedProfile,
+    selectedProfileSettingsId,
     title: getRecordTitle(recordData as RecordEntry),
     entities: record ? getPrimaryEntitiesFromRecord(record) : undefined,
     referenceIds: record ? getReferenceIdsRaw(record) : undefined,
